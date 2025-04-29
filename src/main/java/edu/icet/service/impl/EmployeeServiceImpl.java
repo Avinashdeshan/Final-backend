@@ -1,4 +1,12 @@
 package edu.icet.service.impl;
 
-public class EmployeeServiceImpl {
+import edu.icet.service.EmployeeService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class EmployeeServiceImpl implements EmployeeService {
+
+
 }

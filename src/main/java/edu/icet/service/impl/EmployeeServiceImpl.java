@@ -5,6 +5,7 @@ import edu.icet.entity.EmployeeEntity;
 import edu.icet.repository.EmployeeRepository;
 import edu.icet.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.Optional;
 public class EmployeeServiceImpl implements EmployeeService {
 
     final EmployeeRepository repository;
+    final ModelMapper mapper;
 
     @Override
     public List<EmployeeEntity> getAllEmployees() {
@@ -22,12 +24,18 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Employee createEmployee(Employee employee) {
-        Optional<Employee> existingEmployee = repository.findByEmail(employee.getEmail());
+    public EmployeeEntity createEmployee(Employee employee) {
+        if (employee == null || employee.getEmail() == null) {
+            throw new RuntimeException("Employee or Email is null");
+        }
+
+        Optional<EmployeeEntity> existingEmployee = repository.findByEmail(employee.getEmail());
         if (existingEmployee.isPresent()) {
             throw new RuntimeException("Email already exists");
         }
-        return null;
+
+        EmployeeEntity entity = mapper.map(employee, EmployeeEntity.class);
+        return repository.save(entity);
     }
 
     @Override

@@ -31,13 +31,23 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Employee updateEmployee(Long id, Employee employee) {
-        return null;
+    public EmployeeEntity updateEmployee(Long id, Employee employee) {
+        EmployeeEntity existingEmployee = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Employee not found"));
+
+        existingEmployee.setName(employee.getName());
+        existingEmployee.setEmail(employee.getEmail());
+        existingEmployee.setDepartment(employee.getDepartment());
+
+        return repository.save(existingEmployee);
     }
 
     @Override
     public void deleteEmployee(Long id) {
-
+        if (!repository.existsById(id)) {
+            throw new RuntimeException("Employee not found");
+        }
+        repository.deleteById(id);
     }
 }
 
